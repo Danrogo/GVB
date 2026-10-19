@@ -1,0 +1,1075 @@
+###############################################
+# Good Vibes Beauty Salon API - HTTP Tests
+# VS Code REST Client Extension Required
+###############################################
+
+@baseUrl = http://localhost:3000/api
+@contentType = application/json
+
+###############################################
+# HEALTH CHECK
+###############################################
+
+### Health Check
+GET http://localhost:3000
+Accept: application/json
+
+###############################################
+# USERS API
+###############################################
+
+### Get All Users
+GET {{baseUrl}}/users
+Accept: {{contentType}}
+
+### Get User by ID
+GET {{baseUrl}}/users/1
+Accept: {{contentType}}
+
+### Create New User (Customer)
+POST {{baseUrl}}/users
+Content-Type: {{contentType}}
+
+{
+  "roleId": 6,
+  "firstName": "Jane",
+  "lastName": "Doe",
+  "email": "jane.doe@example.com",
+  "password": "SecurePass123!",
+  "phone": "+254712345678"
+}
+
+### Create New User (Staff - Stylist)
+POST {{baseUrl}}/users
+Content-Type: {{contentType}}
+
+{
+  "roleId": 3,
+  "firstName": "Alice",
+  "lastName": "Smith",
+  "email": "alice.smith@goodvibes.co.ke",
+  "password": "StaffPass123!",
+  "phone": "+254722345678"
+}
+
+### Update User
+PUT {{baseUrl}}/users/9
+Content-Type: {{contentType}}
+
+{
+  "firstName": "Emily",
+  "lastName": "Njeri Updated",
+  "email": "emily.njeri.updated@gmail.com",
+  "phone": "+254712345009"
+}
+
+### Delete User (Soft Delete)
+DELETE {{baseUrl}}/users/14
+Accept: {{contentType}}
+
+### Get Staff by Role (Stylist)
+GET {{baseUrl}}/staff/Stylist
+Accept: {{contentType}}
+
+### Get Staff by Role (Therapist)
+GET {{baseUrl}}/staff/Therapist
+Accept: {{contentType}}
+
+### Get Staff by Role (NailTech)
+GET {{baseUrl}}/staff/NailTech
+Accept: {{contentType}}
+
+###############################################
+# SERVICES API
+###############################################
+
+### Get All Services
+GET {{baseUrl}}/services
+Accept: {{contentType}}
+
+### Get Service by ID
+GET {{baseUrl}}/services/1
+Accept: {{contentType}}
+
+### Get Services by Category (Hair - CategoryId: 1)
+GET {{baseUrl}}/services/category/1
+Accept: {{contentType}}
+
+### Get Services by Category (Nails - CategoryId: 2)
+GET {{baseUrl}}/services/category/2
+Accept: {{contentType}}
+
+### Get Services by Category (Massage - CategoryId: 3)
+GET {{baseUrl}}/services/category/3
+Accept: {{contentType}}
+
+### Create New Service
+POST {{baseUrl}}/services
+Content-Type: {{contentType}}
+
+{
+  "categoryId": 1,
+  "name": "Keratin Treatment",
+  "description": "Professional keratin smoothing treatment",
+  "durationMinutes": 120,
+  "price": 5000.00,
+  "depositAmount": 1500.00
+}
+
+### Update Service
+PUT {{baseUrl}}/services/1
+Content-Type: {{contentType}}
+
+{
+  "name": "Women Haircut & Styling",
+  "description": "Professional haircut with expert styling",
+  "durationMinutes": 60,
+  "price": 1800.00,
+  "depositAmount": null
+}
+
+### Delete Service (Soft Delete)
+DELETE {{baseUrl}}/services/17
+Accept: {{contentType}}
+
+###############################################
+# BOOKINGS API
+###############################################
+
+### Get All Bookings
+GET {{baseUrl}}/bookings
+Accept: {{contentType}}
+
+### Get Booking by ID
+GET {{baseUrl}}/bookings/1
+Accept: {{contentType}}
+
+### Get Bookings by Customer
+GET {{baseUrl}}/bookings/customer/9
+Accept: {{contentType}}
+
+### Get Bookings by Staff
+GET {{baseUrl}}/bookings/staff/3
+Accept: {{contentType}}
+
+### Create New Booking
+POST {{baseUrl}}/bookings
+Content-Type: {{contentType}}
+Authorization: Bearer {{token}}
+
+{
+  "customerId": 9,
+  "serviceId": 1,
+  "staffId": 3,
+  "bookingDate": "2025-01-25",
+  "startTime": "10:00:00",
+  "endTime": "11:00:00",
+  "notes": "First appointment of the day",
+  "totalPrice": 1500.00,
+  "depositPaid": 0
+}
+
+### Create Booking with Deposit
+POST {{baseUrl}}/bookings
+Content-Type: {{contentType}}
+Authorization: Bearer {{token}}
+
+{
+  "customerId": 10,
+  "serviceId": 3,
+  "staffId": 4,
+  "bookingDate": "2025-01-26",
+  "startTime": "14:00:00",
+   "endTime": "16:00:00",
+  "notes": "Hair coloring - blonde highlights requested",
+  "totalPrice": 3500.00,
+  "depositPaid": 1000.00
+}
+
+### Create Booking without Specific Staff (Any Available)
+POST {{baseUrl}}/bookings
+Content-Type: {{contentType}}
+
+{
+  "customerId": 11,
+  "serviceId": 8,
+  "staffId": null,
+  "bookingDate": "2025-01-27",
+  "startTime": "15:00:00",
+  "endTime": "16:00:00",
+  "notes": "No staff preference",
+  "totalPrice": 1200.00,
+  "depositPaid": 0
+}
+
+### Update Booking Status to Confirmed
+PUT {{baseUrl}}/bookings/9/status
+Content-Type: {{contentType}}
+
+{
+  "statusId": 2
+}
+
+### Update Booking Status to Completed
+PUT {{baseUrl}}/bookings/5/status
+Content-Type: {{contentType}}
+
+{
+  "statusId": 4
+}
+
+### Cancel Booking
+PUT {{baseUrl}}/bookings/10/cancel
+Content-Type: {{contentType}}
+
+{
+  "reason": "Customer requested to reschedule due to emergency"
+}
+
+###############################################
+# PAYMENTS API
+###############################################
+
+### Get All Payments
+GET {{baseUrl}}/payments
+Accept: {{contentType}}
+
+### Get Payment by ID
+GET {{baseUrl}}/payments/1
+Accept: {{contentType}}
+
+### Get Payments by Booking
+GET {{baseUrl}}/payments/booking/1
+Accept: {{contentType}}
+
+### Create Payment - M-Pesa
+POST {{baseUrl}}/payments
+Content-Type: {{contentType}}
+
+{
+  "bookingId": 5,
+  "amount": 2000.00,
+  "methodId": 3,
+  "transactionRef": "MPX789456123"
+}
+
+### Create Payment - Cash
+POST {{baseUrl}}/payments
+Content-Type: {{contentType}}
+
+{
+  "bookingId": 6,
+  "amount": 2500.00,
+  "methodId": 1,
+  "transactionRef": null
+}
+
+### Create Payment - Card
+POST {{baseUrl}}/payments
+Content-Type: {{contentType}}
+
+{
+  "bookingId": 7,
+  "amount": 3500.00,
+  "methodId": 2,
+  "transactionRef": "CARD123789456"
+}
+
+### Update Payment Status to Completed
+PUT {{baseUrl}}/payments/6/status
+Content-Type: {{contentType}}
+
+{
+  "statusId": 2
+}
+
+### Update Payment Status to Failed
+PUT {{baseUrl}}/payments/9/status
+Content-Type: {{contentType}}
+
+{
+  "statusId": 3
+}
+
+### Refund Payment
+PUT {{baseUrl}}/payments/1/refund
+Content-Type: {{contentType}}
+
+{
+  "refundAmount": 1500.00
+}
+
+### Partial Refund Payment
+PUT {{baseUrl}}/payments/2/refund
+Content-Type: {{contentType}}
+
+{
+  "refundAmount": 1000.00
+}
+
+###############################################
+# REVIEWS API
+###############################################
+
+### Get All Reviews
+GET {{baseUrl}}/reviews
+Accept: {{contentType}}
+
+### Get Review by ID
+GET {{baseUrl}}/reviews/1
+Accept: {{contentType}}
+
+### Get Reviews by Service
+GET {{baseUrl}}/reviews/service/1
+Accept: {{contentType}}
+
+### Get Reviews by Staff
+GET {{baseUrl}}/reviews/staff/3
+Accept: {{contentType}}
+
+### Create Review - 5 Stars
+POST {{baseUrl}}/reviews
+Content-Type: {{contentType}}
+
+{
+  "bookingId": 1,
+  "customerId": 9,
+  "staffId": 3,
+  "serviceId": 1,
+  "rating": 5,
+  "comment": "Absolutely fantastic service! Grace is an amazing stylist. Will definitely come back!"
+}
+
+### Create Review - 4 Stars
+POST {{baseUrl}}/reviews
+Content-Type: {{contentType}}
+
+{
+  "bookingId": 2,
+  "customerId": 10,
+  "staffId": 5,
+  "serviceId": 11,
+  "rating": 4,
+  "comment": "Great massage, very relaxing. The only improvement would be the room temperature."
+}
+
+### Create Review - Without Comment
+POST {{baseUrl}}/reviews
+Content-Type: {{contentType}}
+
+{
+  "bookingId": 3,
+  "customerId": 11,
+  "staffId": 7,
+  "serviceId": 7,
+  "rating": 5,
+  "comment": null
+}
+
+### Approve Review
+PUT {{baseUrl}}/reviews/7/approve
+Accept: {{contentType}}
+
+### Delete Review
+DELETE {{baseUrl}}/reviews/8
+Accept: {{contentType}}
+
+###############################################
+# NOTIFICATIONS API
+###############################################
+
+### Get All Notifications
+GET {{baseUrl}}/notifications
+Accept: {{contentType}}
+
+### Get Notifications by User
+GET {{baseUrl}}/notifications/user/9
+Accept: {{contentType}}
+
+### Get Unread Notifications
+GET {{baseUrl}}/notifications/user/9/unread
+Accept: {{contentType}}
+
+### Create Notification - Booking Confirmed
+POST {{baseUrl}}/notifications
+Content-Type: {{contentType}}
+
+{
+  "userId": 9,
+  "typeId": 1,
+  "title": "Booking Confirmed",
+  "message": "Your booking for Women Haircut on 2025-01-25 at 10:00 has been confirmed with Grace.",
+  "channel": "Email",
+  "relatedEntityId": 12,
+  "relatedEntityType": "Booking"
+}
+
+### Create Notification - Payment Received
+POST {{baseUrl}}/notifications
+Content-Type: {{contentType}}
+
+{
+  "userId": 10,
+  "typeId": 4,
+  "title": "Payment Received",
+  "message": "Payment of KES 3500.00 received for booking #7. Thank you!",
+  "channel": "InApp",
+  "relatedEntityId": 7,
+  "relatedEntityType": "Payment"
+}
+
+### Create Notification - Booking Reminder (SMS)
+POST {{baseUrl}}/notifications
+Content-Type: {{contentType}}
+
+{
+  "userId": 11,
+  "typeId": 2,
+  "title": "Appointment Reminder",
+  "message": "Reminder: You have a booking for Spa Pedicure tomorrow at 15:00.",
+  "channel": "SMS",
+  "relatedEntityId": 13,
+  "relatedEntityType": "Booking"
+}
+
+### Mark Notification as Read
+PUT {{baseUrl}}/notifications/9/read
+Accept: {{contentType}}
+
+### Mark All Notifications as Read for User
+PUT {{baseUrl}}/notifications/user/9/read-all
+Accept: {{contentType}}
+
+###############################################
+# SUPPORT TICKETS API
+###############################################
+
+### Get All Tickets
+GET {{baseUrl}}/tickets
+Accept: {{contentType}}
+
+### Get Ticket by ID
+GET {{baseUrl}}/tickets/1
+Accept: {{contentType}}
+
+### Get Tickets by Customer
+GET {{baseUrl}}/tickets/customer/11
+Accept: {{contentType}}
+
+### Get Ticket Messages
+GET {{baseUrl}}/tickets/1/messages
+Accept: {{contentType}}
+
+### Create Support Ticket - Medium Priority
+POST {{baseUrl}}/tickets
+Content-Type: {{contentType}}
+
+{
+  "customerId": 9,
+  "subject": "Unable to book appointment online",
+  "description": "I'm trying to book an appointment through the website but I keep getting an error message when I select a date. Can someone help?",
+  "priority": "Medium"
+}
+
+### Create Support Ticket - High Priority
+POST {{baseUrl}}/tickets
+Content-Type: {{contentType}}
+
+{
+  "customerId": 10,
+  "subject": "Charged twice for same service",
+  "description": "I was charged twice on my credit card for my last appointment. Transaction IDs: CARD123789 and CARD123790. Please refund one of them.",
+  "priority": "High"
+}
+
+### Create Support Ticket - Low Priority
+POST {{baseUrl}}/tickets
+Content-Type: {{contentType}}
+
+{
+  "customerId": 13,
+  "subject": "Product recommendation request",
+  "description": "Can you recommend a good hair product for dry and frizzy hair? I'd like to purchase it during my next visit.",
+  "priority": "Low"
+}
+
+### Add Message to Ticket (Customer Reply)
+POST {{baseUrl}}/tickets/1/messages
+Content-Type: {{contentType}}
+
+{
+  "senderId": 11,
+  "message": "Thank you for the quick response! Yes, I would like to reschedule to January 23rd at 2:00 PM.",
+  "isInternal": false
+}
+
+### Add Message to Ticket (Staff Reply)
+POST {{baseUrl}}/tickets/2/messages
+Content-Type: {{contentType}}
+
+{
+  "senderId": 2,
+  "message": "Hi Brian, we use Wella Koleston Perfect and Schwarzkopf Igora Royal. Both are ammonia-free options. Would you like to schedule a patch test?",
+  "isInternal": false
+}
+
+### Add Internal Note to Ticket (Staff Only)
+POST {{baseUrl}}/tickets/2/messages
+Content-Type: {{contentType}}
+
+{
+  "senderId": 2,
+  "message": "Customer has history of sensitive scalp. Recommend scheduling patch test 48 hours before service. Update stylist notes.",
+  "isInternal": true
+}
+
+### Update Ticket Status to In Progress
+PUT {{baseUrl}}/tickets/3/status
+Content-Type: {{contentType}}
+
+{
+  "statusId": 2
+}
+
+### Update Ticket Status to Resolved
+PUT {{baseUrl}}/tickets/1/status
+Content-Type: {{contentType}}
+
+{
+  "statusId": 4
+}
+
+### Update Ticket Status to Closed
+PUT {{baseUrl}}/tickets/1/status
+Content-Type: {{contentType}}
+
+{
+  "statusId": 5
+}
+
+### Assign Ticket to Staff
+PUT {{baseUrl}}/tickets/3/assign
+Content-Type: {{contentType}}
+
+{
+  "assignedToId": 2
+}
+
+###############################################
+# AVAILABILITY API
+###############################################
+
+### Get Staff Availability
+GET {{baseUrl}}/availability/staff/3
+Accept: {{contentType}}
+
+### Get Staff Time Off
+GET {{baseUrl}}/availability/staff/3/timeoff
+Accept: {{contentType}}
+
+### Add Staff Availability - Monday
+POST {{baseUrl}}/availability
+Content-Type: {{contentType}}
+
+{
+  "staffId": 3,
+  "dayOfWeek": 1,
+  "startTime": "09:00:00",
+  "endTime": "18:00:00"
+}
+
+### Add Staff Availability - Sunday (Day Off)
+POST {{baseUrl}}/availability
+Content-Type: {{contentType}}
+
+{
+  "staffId": 4,
+  "dayOfWeek": 0,
+  "startTime": "00:00:00",
+  "endTime": "00:00:00"
+}
+
+### Update Staff Availability
+PUT {{baseUrl}}/availability/1
+Content-Type: {{contentType}}
+
+{
+  "startTime": "08:00:00",
+  "endTime": "17:00:00",
+  "isAvailable": true
+}
+
+### Mark Staff as Unavailable for Specific Day
+PUT {{baseUrl}}/availability/5
+Content-Type: {{contentType}}
+
+{
+  "startTime": "10:00:00",
+  "endTime": "19:00:00",
+  "isAvailable": false
+}
+
+### Request Time Off - Single Day
+POST {{baseUrl}}/availability/timeoff
+Content-Type: {{contentType}}
+
+{
+  "staffId": 4,
+  "startDate": "2025-02-14",
+  "endDate": "2025-02-14",
+  "reason": "Personal day off"
+}
+
+### Request Time Off - Multiple Days (Vacation)
+POST {{baseUrl}}/availability/timeoff
+Content-Type: {{contentType}}
+
+{
+  "staffId": 7,
+  "startDate": "2025-03-01",
+  "endDate": "2025-03-07",
+  "reason": "Annual vacation leave"
+}
+
+### Request Time Off - Medical
+POST {{baseUrl}}/availability/timeoff
+Content-Type: {{contentType}}
+
+{
+  "staffId": 5,
+  "startDate": "2025-02-20",
+  "endDate": "2025-02-21",
+  "reason": "Medical appointment"
+}
+
+### Approve Time Off Request
+PUT {{baseUrl}}/availability/timeoff/1/approve
+Accept: {{contentType}}
+
+###############################################
+# ERROR HANDLING TESTS
+###############################################
+
+### Test 404 - Invalid Endpoint
+GET {{baseUrl}}/invalid-endpoint
+Accept: {{contentType}}
+
+### Test 404 - User Not Found
+GET {{baseUrl}}/users/999999
+Accept: {{contentType}}
+
+### Test 400 - Missing Required Fields (Create User)
+POST {{baseUrl}}/users
+Content-Type: {{contentType}}
+
+{
+  "firstName": "Test",
+  "lastName": "User"
+}
+
+### Test 409 - Duplicate Email
+POST {{baseUrl}}/users
+Content-Type: {{contentType}}
+
+{
+  "roleId": 6,
+  "firstName": "Emily",
+  "lastName": "Njeri",
+  "email": "emily.njeri@gmail.com",
+  "password": "Password123!",
+  "phone": "+254712345009"
+}
+
+### Test 400 - Invalid Rating (Review)
+POST {{baseUrl}}/reviews
+Content-Type: {{contentType}}
+
+{
+  "bookingId": 1,
+  "customerId": 9,
+  "staffId": 3,
+  "serviceId": 1,
+  "rating": 10,
+  "comment": "Invalid rating test"
+}
+
+###############################################
+# BULK OPERATIONS TESTS
+###############################################
+
+### Get Multiple Services by Different Categories
+GET {{baseUrl}}/services/category/1
+Accept: {{contentType}}
+
+###
+GET {{baseUrl}}/services/category/2
+Accept: {{contentType}}
+
+###
+GET {{baseUrl}}/services/category/3
+Accept: {{contentType}}
+
+### Get Bookings for Different Customers
+GET {{baseUrl}}/bookings/customer/9
+Accept: {{contentType}}
+
+###
+GET {{baseUrl}}/bookings/customer/10
+Accept: {{contentType}}
+
+###
+GET {{baseUrl}}/bookings/customer/11
+Accept: {{contentType}}
+
+
+
+###############################################
+# Authentication API Tests
+# Good Vibes Beauty Salon
+###############################################
+
+@baseUrl = http://localhost:3000/api
+@contentType = application/json
+
+# Store token after login (will be set after first successful login)
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjE3LCJlbWFpbCI6InRlc3RmbG93QGV4YW1wbGUuY29tIiwicm9sZUlkIjo2LCJyb2xlTmFtZSI6IkN1c3RvbWVyIiwiaWF0IjoxNzcyODA4MTQ4LCJleHAiOjE3NzM0MTI5NDh9.bYcodFxW136zKrvgZvcjajEfsr0LUZeTqGiz2erROAk
+
+###############################################
+# 1. REGISTER NEW USER
+###############################################
+
+### Register as Customer (Default Role)
+POST {{baseUrl}}/auth/register
+Content-Type: {{contentType}}
+
+{
+  "firstName": "John",
+  "lastName": "Smith",
+  "email": "john.smith@example.com",
+  "password": "SecurePass123!",
+  "phone": "+254722111222"
+}
+
+### Register with Specific Role (Staff - Stylist)
+POST {{baseUrl}}/auth/register
+Content-Type: {{contentType}}
+
+{
+  "roleId": 3,
+  "firstName": "Sarah",
+  "lastName": "Jones",
+  "email": "sarah.jones@goodvibes.co.ke",
+  "password": "StaffPass456!",
+  "phone": "+254733444555"
+}
+
+### Register - Missing Required Fields (Should Fail)
+POST {{baseUrl}}/auth/register
+Content-Type: {{contentType}}
+
+{
+  "firstName": "Test",
+  "email": "incomplete@example.com"
+}
+
+### Register - Weak Password (Should Fail)
+POST {{baseUrl}}/auth/register
+Content-Type: {{contentType}}
+
+{
+  "firstName": "Test",
+  "lastName": "User",
+  "email": "test@example.com",
+  "password": "123"
+}
+
+### Register - Duplicate Email (Should Fail)
+POST {{baseUrl}}/auth/register
+Content-Type: {{contentType}}
+
+{
+  "firstName": "Emily",
+  "lastName": "Duplicate",
+  "email": "emily.njeri@gmail.com",
+  "password": "Password123!",
+  "phone": "+254712345009"
+}
+
+###############################################
+# 2. LOGIN
+###############################################
+
+### Login - Existing Customer
+# @name loginCustomer
+POST {{baseUrl}}/auth/login
+Content-Type: {{contentType}}
+
+{
+  "email": "emily.njeri@gmail.com",
+  "password": "Password123!"
+}
+
+### Login - Existing Staff (Admin)
+# @name loginAdmin
+POST {{baseUrl}}/auth/login
+Content-Type: {{contentType}}
+
+{
+  "email": "admin@goodvibes.co.ke",
+  "password": "Password123!"
+}
+
+### Login - Existing Staff (Manager)
+# @name loginManager
+POST {{baseUrl}}/auth/login
+Content-Type: {{contentType}}
+
+{
+  "email": "manager@goodvibes.co.ke",
+  "password": "Password123!"
+}
+
+### Login - Newly Registered User
+POST {{baseUrl}}/auth/login
+Content-Type: {{contentType}}
+
+{
+  "email": "john.smith@example.com",
+  "password": "SecurePass123!"
+}
+
+### Login - Wrong Password (Should Fail)
+POST {{baseUrl}}/auth/login
+Content-Type: {{contentType}}
+
+{
+  "email": "emily.njeri@gmail.com",
+  "password": "WrongPassword123"
+}
+
+### Login - Non-existent Email (Should Fail)
+POST {{baseUrl}}/auth/login
+Content-Type: {{contentType}}
+
+{
+  "email": "nonexistent@example.com",
+  "password": "Password123!"
+}
+
+### Login - Missing Fields (Should Fail)
+POST {{baseUrl}}/auth/login
+Content-Type: {{contentType}}
+
+{
+  "email": "emily.njeri@gmail.com"
+}
+
+###############################################
+# 3. VERIFY TOKEN
+###############################################
+
+### Verify Token - Valid Token
+# Replace 'your_token_here' with actual token from login response
+GET {{baseUrl}}/auth/verify
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjE3LCJlbWFpbCI6InRlc3RmbG93QGV4YW1wbGUuY29tIiwicm9sZUlkIjo2LCJyb2xlTmFtZSI6IkN1c3RvbWVyIiwiaWF0IjoxNzcyODA2ODM2LCJleHAiOjE3NzM0MTE2MzZ9.lYabWZ-Mn6pjG-XVFet8jl6pD-D6u54H5TJb41Pcc1c
+GET {{baseUrl}}/auth/verify
+
+### Verify Token - Invalid Token (Should Fail)
+GET {{baseUrl}}/auth/verify
+Authorization: Bearer invalid_token_here
+
+### Verify Token - Expired Token (Should Fail)
+GET {{baseUrl}}/auth/verify
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImV4cCI6MTYwMDAwMDAwMH0.expired_token
+
+###############################################
+# 4. CHANGE PASSWORD
+###############################################
+
+### Change Password - Valid Request
+POST {{baseUrl}}/auth/change-password
+Content-Type: {{contentType}}
+
+{
+  "userId": 9,
+  "currentPassword": "Password123!",
+  "newPassword": "NewSecurePass456!"
+}
+
+### Change Password - Wrong Current Password (Should Fail)
+POST {{baseUrl}}/auth/change-password
+Content-Type: {{contentType}}
+
+{
+  "userId": 9,
+  "currentPassword": "WrongPassword",
+  "newPassword": "NewSecurePass456!"
+}
+
+### Change Password - Weak New Password (Should Fail)
+POST {{baseUrl}}/auth/change-password
+Content-Type: {{contentType}}
+
+{
+  "userId": 9,
+  "currentPassword": "Password123!",
+  "newPassword": "weak"
+}
+
+### Change Password - Missing Fields (Should Fail)
+POST {{baseUrl}}/auth/change-password
+Content-Type: {{contentType}}
+
+{
+  "userId": 9,
+  "currentPassword": "Password123!"
+}
+
+###############################################
+# 5. LOGOUT
+###############################################
+
+### Logout
+POST {{baseUrl}}/auth/logout
+Content-Type: {{contentType}}
+
+###############################################
+# 6. PROTECTED ROUTES TESTING
+###############################################
+
+### Access Protected Route - WITH Valid Token
+# Example: Get user's bookings (requires authentication)
+GET {{baseUrl}}/bookings/customer/9
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjE3LCJlbWFpbCI6InRlc3RmbG93QGV4YW1wbGUuY29tIiwicm9sZUlkIjo2LCJyb2xlTmFtZSI6IkN1c3RvbWVyIiwiaWF0IjoxNzcyODA2ODM2LCJleHAiOjE3NzM0MTE2MzZ9.lYabWZ-Mn6pjG-XVFet8jl6pD-D6u54H5TJb41Pcc1c
+
+### Access Protected Route - WITHOUT Token (Should Fail with 401)
+GET {{baseUrl}}/bookings/customer/9
+Accept: {{contentType}}
+
+### Access Admin Route - WITH Customer Token (Should Fail with 403)
+# Customer trying to access admin-only user management
+GET {{baseUrl}}/users
+Authorization: Bearer customer_token_here
+Accept: {{contentType}}
+
+### Access Admin Route - WITH Admin Token (Should Succeed)
+GET {{baseUrl}}/users
+Authorization: Bearer admin_token_here
+Accept: {{contentType}}
+
+###############################################
+# 7. COMPLETE LOGIN FLOW TEST
+###############################################
+
+### Step 1: Register New User
+# @name register
+POST {{baseUrl}}/auth/register
+Content-Type: {{contentType}}
+
+{
+  "firstName": "TestFlow",
+  "lastName": "User",
+  "email": "testflow@example.com",
+  "password": "FlowTest123!",
+  "phone": "+254700111222"
+}
+
+### Step 2: Login with New User
+# @name login
+POST {{baseUrl}}/auth/login
+Content-Type: {{contentType}}
+
+{
+  "email": "testflow@example.com",
+  "password": "FlowTest123!"
+}
+
+### Step 3: Verify Token (use token from Step 2)
+GET {{baseUrl}}/auth/verify
+Authorization: Bearer {{login.response.body.token}}
+
+### Step 4: Access Protected Resource (use token from Step 2)
+GET {{baseUrl}}/bookings/customer/{{login.response.body.user.UserId}}
+Authorization: Bearer {{login.response.body.token}}
+Accept: {{contentType}}
+
+### Step 5: Change Password
+POST {{baseUrl}}/auth/change-password
+Content-Type: {{contentType}}
+
+{
+  "userId": {{login.response.body.user.UserId}},
+  "currentPassword": "FlowTest123!",
+  "newPassword": "NewFlowTest456!"
+}
+
+### Step 6: Login with New Password
+POST {{baseUrl}}/auth/login
+Content-Type: {{contentType}}
+
+{
+  "email": "testflow@example.com",
+  "password": "NewFlowTest456!"
+}
+
+### Step 7: Logout
+POST {{baseUrl}}/auth/logout
+Content-Type: {{contentType}}
+
+###############################################
+# NOTES
+###############################################
+
+# Payment Methods IDs:
+# 1 = Cash
+# 2 = Card
+# 3 = M-Pesa
+# 4 = Bank Transfer
+
+# Payment Status IDs:
+# 1 = Pending
+# 2 = Completed
+# 3 = Failed
+# 4 = Refunded
+
+# Booking Status IDs:
+# 1 = Pending
+# 2 = Confirmed
+# 3 = InProgress
+# 4 = Completed
+# 5 = Cancelled
+# 6 = NoShow
+
+# Ticket Status IDs:
+# 1 = Open
+# 2 = InProgress
+# 3 = WaitingCustomer
+# 4 = Resolved
+# 5 = Closed
+
+# Role IDs:
+# 1 = Admin
+# 2 = Manager
+# 3 = Stylist
+# 4 = Therapist
+# 5 = NailTech
+# 6 = Customer
+
+# Notification Type IDs:
+# 1 = BookingConfirmed
+# 2 = BookingReminder
+# 3 = BookingCancelled
+# 4 = PaymentReceived
+# 5 = PaymentPending
+# 6 = TicketCreated
+# 7 = TicketUpdated
+# 8 = TicketResolved
+
+# Day of Week:
+# 0 = Sunday
+# 1 = Monday
+# 2 = Tuesday
+# 3 = Wednesday
+# 4 = Thursday
+# 5 = Friday
+# 6 = Saturday
